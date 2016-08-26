@@ -24,13 +24,16 @@ var studentListChildrenFiltered = function(PerPage,CurPage){
     studentList.each(function(index,li){
         
         //search functinailty here? if input has value?
-        
-        var studentListItem = $(li);
+        var studentListItem = $(li);        
         var pageIndexStart = PerPage*CurPage-PerPage;
         var pageIndexEnd = PerPage*CurPage;
+        
+      //  $(list).find("a:not(:contains(" + filter + "))").parent().slideUp();
+   // $(list).find("a:contains(" + filter + ")").parent().slideDown();
                 
         if(index >= pageIndexStart && index < pageIndexEnd){           
             studentListItem.show();
+            //studentListItem.find("h3:contains('aapo')").hide();
             console.log(index + ' ' + pageIndexStart + '-' + pageIndexEnd);        
         }else{           
             studentListItem.hide();       
@@ -82,45 +85,41 @@ studentSearch.append($('<input>').attr({placeholder:'Search for students...',id:
 var searchButton = $('<button>').text('Search');
 studentSearch.append(searchButton.on('click',function(){
     //Student Search
+     var PerPage = 10;
+        var CurPage = 1;
+    
     console.log($('#inputSearch').val());
-    
-    //returns h3 array?
-    //studentSearchedList = studentList.find("h3:contains(" + $('#inputSearch').val() + ")");
-    
-   // studentSearchedList = studentList.filter($('#inputSearch').val());
-    
-    //console.log($(studentSearchedList));
-    
-   
-    
+    var search = $('#inputSearch').val();
+  CurrentPage = CurPage;//set global
     
     studentList.each(function(index,li){
-        var PerPage = 5;
-        var CurPage = 0;
-        var studentListItem = $(li);
+       
+        //search functinailty here? if input has value?
+        var studentListItem = $(li);        
         var pageIndexStart = PerPage*CurPage-PerPage;
         var pageIndexEnd = PerPage*CurPage;
         
-       $(li).filter(function(){
-           
-         //  console.log($(this).filter($('#inputSearch').val()));
-           
-           
-       });
-        
-        if(index >= pageIndexStart && index < pageIndexEnd){
+      //  $(list).find("a:not(:contains(" + filter + "))").parent().slideUp();
+   // $(list).find("a:contains(" + filter + ")").parent().slideDown();
+                
+        if(index >= pageIndexStart && index < pageIndexEnd){           
             studentListItem.show();
-            console.log(index + ' ' + pageIndexStart + '-' + pageIndexEnd);
-        }else{
-            studentListItem.hide();
+           // studentListItem.find("h3:contains('"+ search + "')").parent().parent().hide();
+            if(studentListItem.find("h3:contains('"+ search + "')").length !== 0){
+                console.log(studentListItem.find("h3:contains('"+ search + "')").length);
+            }
+           // console.log(index + ' ' + pageIndexStart + '-' + pageIndexEnd);        
+        }else{           
+            studentListItem.hide();       
         }
         
     });    
-    
+    paginationCreation();
     
    
     
 }))
+
 $('.page-header').append(studentSearch);
 
 ////////////////////////////////////////////////////////////////////
