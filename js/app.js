@@ -1,19 +1,14 @@
 var StudentsPerPage = 5;
 var PageCount = 0;
 var CurrentPage = 1;
+var studentList = null;
+var studentListSearchFiltered = null;
+var studentListMaster = null;
 
-//temp 
-var studentSearchedList;
 
-var studentList = $('.student-list').children();
-studentList.hide();
+studentListMaster = $('.student-list').children();
+studentList = studentListMaster;
 
-//this will loop through the list
-var studentListChildren = function(){
-    studentList.each(function(index,li){
-        console.log(index);
-    });    
-}
 
 console.log(studentList.length);
 
@@ -21,26 +16,33 @@ console.log(studentList.length);
 var studentListChildrenFiltered = function(PerPage,CurPage){
     CurrentPage = CurPage;//set global
     
-    studentList.each(function(index,li){
-        
-        //search functinailty here? if input has value?
-        var studentListItem = $(li);        
-        var pageIndexStart = PerPage*CurPage-PerPage;
-        var pageIndexEnd = PerPage*CurPage;
-        
-      //  $(list).find("a:not(:contains(" + filter + "))").parent().slideUp();
-   // $(list).find("a:contains(" + filter + ")").parent().slideDown();
-                
-        if(index >= pageIndexStart && index < pageIndexEnd){           
-            studentListItem.show();
-            //studentListItem.find("h3:contains('aapo')").hide();
-            console.log(index + ' ' + pageIndexStart + '-' + pageIndexEnd);        
-        }else{           
-            studentListItem.hide();       
-        }
-        
-    });    
-    paginationCreation();
+    
+    if(studentList.length > 0){
+        studentList.each(function(index,li){
+
+            //search functinailty here? if input has value?
+            var studentListItem = $(li);        
+            var pageIndexStart = PerPage*CurPage-PerPage;
+            var pageIndexEnd = PerPage*CurPage;       
+
+            if(index >= pageIndexStart && index < pageIndexEnd){           
+               // studentListItem.show();
+                studentListItem.fadeIn(1000);
+                //console.log(index + ' ' + pageIndexStart + '-' + pageIndexEnd);        
+            }else{           
+                studentListItem.hide();       
+            }
+
+        });  
+        paginationCreation();
+        $('.student-notfound').hide();
+        $(".pagination").show();
+    }else{
+        $('.student-notfound').show();
+        $(".pagination").hide();
+    }
+    
+    
 }
 
 //Create Pagination at bottom of student list
@@ -81,51 +83,46 @@ var paginationCreation = function(){
 ////////////////////////////////////////////////////////////////
 
 var studentSearch = $("<div>").addClass('student-search');
-studentSearch.append($('<input>').attr({placeholder:'Search for students...',id:'inputSearch'}));
+studentSearch.append($('<input>').on('keyup',function(){ DataSearch(this);}).attr({placeholder:'Search for students...',id:'inputSearch'}));
+var inputSearch = $('#inputSearch');
 var searchButton = $('<button>').text('Search');
+
+function DataSearch(inputField){
+    var inputData = $(inputField).val();
+    
+    if(inputData !== ''){
+    //search student list master
+    studentListSearchFiltered = studentListMaster.find("h3:contains('"+ $(inputField).val().toLowerCase() + "'),span:contains('"+ $(inputField).val().toLowerCase() + "')").parent().parent().show();
+    
+    
+    //update list to display filtered results
+    studentList.hide();
+    studentList = studentListSearchFiltered;
+    studentListChildrenFiltered(StudentsPerPage,1);
+        
+    }else{
+        //input field was cleared out, reset to master list
+        studentList = studentListMaster;
+        studentListChildrenFiltered(StudentsPerPage,1);
+        
+    }
+    
+    
+}
+
+
 studentSearch.append(searchButton.on('click',function(){
-    //Student Search
-     var PerPage = 10;
-        var CurPage = 1;
-    
-    console.log($('#inputSearch').val());
-    var search = $('#inputSearch').val();
-  CurrentPage = CurPage;//set global
-    
-    studentList.each(function(index,li){
-       
-        //search functinailty here? if input has value?
-        var studentListItem = $(li);        
-        var pageIndexStart = PerPage*CurPage-PerPage;
-        var pageIndexEnd = PerPage*CurPage;
-        
-      //  $(list).find("a:not(:contains(" + filter + "))").parent().slideUp();
-   // $(list).find("a:contains(" + filter + ")").parent().slideDown();
-                
-        if(index >= pageIndexStart && index < pageIndexEnd){           
-            studentListItem.show();
-           // studentListItem.find("h3:contains('"+ search + "')").parent().parent().hide();
-            if(studentListItem.find("h3:contains('"+ search + "')").length !== 0){
-                console.log(studentListItem.find("h3:contains('"+ search + "')").length);
-            }
-           // console.log(index + ' ' + pageIndexStart + '-' + pageIndexEnd);        
-        }else{           
-            studentListItem.hide();       
-        }
-        
-    });    
-    paginationCreation();
-    
-   
+    var inputSearch = $('#inputSearch');
+    DataSearch(inputSearch);
     
 }))
 
+$('.page-header').after($("<div>No students found.</div>").addClass('student-notfound').hide())
 $('.page-header').append(studentSearch);
 
-////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
 
-//display students paginated list
+
+//display students paginated list on first run
 studentListChildrenFiltered(StudentsPerPage,1);
 
 
