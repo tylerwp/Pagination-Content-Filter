@@ -66,7 +66,6 @@ var paginationCreation = function(){
             //Add click event to anchor tags
             PagiUL.append(PagiLI.append(PagiLink.on("click",function(){
                     //use clicked link's text as page value to update view
-                    var thePage = this;             
                     //call function when clicked
                     studentListChildrenFiltered(StudentsPerPage,thePage.innerText);
                })));
