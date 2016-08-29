@@ -4,8 +4,9 @@ var studentListMaster;
 var studentList;
 var studentListSearchFiltered;
 
-
+//get student list data
 studentListMaster = $('.student-list').children();
+//copy master list to studentList for manipulation 
 studentList = studentListMaster;
 
 console.log(studentList.length);
@@ -50,35 +51,37 @@ var paginationCreation = function(){
     var pagination = $("<div>").addClass('pagination');
     var PagiUL = $("<ul>");  
 
+    //create paging elements based on number of students and page size
     for(i=0;i<studentList.length/StudentsPerPage;i++){
+        //add active class if current page, then add click function for the rest.
         if(i == CurrentPage-1){
             var PagiLI = $("<li>");
             var PagiLink = $('<a href="#">');
             PagiLink.text(i+1);
-            PagiUL.append(PagiLI.append(PagiLink.addClass("active")));
-            
+            PagiUL.append(PagiLI.append(PagiLink.addClass("active")));            
         }else{
             var PagiLI = $("<li>");
             var PagiLink = $('<a href="#">');
             PagiLink.text(i+1);
-            //Add list items and click event to anchor tags
+            //Add click event to anchor tags
             PagiUL.append(PagiLI.append(PagiLink.on("click",function(){
                     //use clicked link's text as page value to update view
-                    var thePage = this;                             
+                    var thePage = this;             
+                    //call function when clicked
                     studentListChildrenFiltered(StudentsPerPage,thePage.innerText);
                })));
         }
        
     }
     //remove pagination if exists
-    $(".pagination").remove();//find better way to update pagination?
+    $(".pagination").remove();
+    //add updated paging
     pagination.append(PagiUL);    
     page.append(pagination);
 }
 
-////////////////////////////////////////////////////////////////
-//Add search fields to element with class of page-header
-////////////////////////////////////////////////////////////////
+
+//Add search fields to DOM with button click and keyup events
 
 var studentSearch = $("<div>").addClass('student-search');
 studentSearch.append($('<input>').on('keyup',function(){ DataSearch(this);}).attr({placeholder:'Search for students...',id:'inputSearch'}));
@@ -99,7 +102,7 @@ function DataSearch(inputField){
     studentListChildrenFiltered(StudentsPerPage,1);
         
     }else{
-        //input field was cleared out, reset to master list
+        //input field was empty, reset to master list
         studentList = studentListMaster;
         studentListChildrenFiltered(StudentsPerPage,1);
         
@@ -108,13 +111,13 @@ function DataSearch(inputField){
     
 }
 
-
+//call search function on button click
 studentSearch.append(searchButton.on('click',function(){
     var inputSearch = $('#inputSearch');
     DataSearch(inputSearch);
     
 }))
-
+//add not found elements to page
 $('.page-header').after($("<div>No students found.</div>").addClass('student-notfound').hide())
 $('.page-header').append(studentSearch);
 
