@@ -1,14 +1,12 @@
-var StudentsPerPage = 5;
-var PageCount = 0;
+var StudentsPerPage = 10;
 var CurrentPage = 1;
-var studentList = null;
-var studentListSearchFiltered = null;
-var studentListMaster = null;
+var studentListMaster;
+var studentList;
+var studentListSearchFiltered;
 
 
 studentListMaster = $('.student-list').children();
 studentList = studentListMaster;
-
 
 console.log(studentList.length);
 
@@ -16,32 +14,32 @@ console.log(studentList.length);
 var studentListChildrenFiltered = function(PerPage,CurPage){
     CurrentPage = CurPage;//set global
     
-    
+    //check if list has data
     if(studentList.length > 0){
-        studentList.each(function(index,li){
-
-            //search functinailty here? if input has value?
+        //loop through current list
+        studentList.each(function(index,li){            
+            
             var studentListItem = $(li);        
             var pageIndexStart = PerPage*CurPage-PerPage;
             var pageIndexEnd = PerPage*CurPage;       
-
+            //display list based on current page
             if(index >= pageIndexStart && index < pageIndexEnd){           
-               // studentListItem.show();
-                studentListItem.fadeIn(1000);
-                //console.log(index + ' ' + pageIndexStart + '-' + pageIndexEnd);        
-            }else{           
+               //fade in results
+                studentListItem.fadeIn(1000);                       
+            }else{ 
+               //hide elements that are not on current page
                 studentListItem.hide();       
             }
-
         });  
-        paginationCreation();
-        $('.student-notfound').hide();
+        //create and show paging
+        paginationCreation();        
         $(".pagination").show();
+        $('.student-notfound').hide();//hide not found element if displayed
     }else{
+        //list has no data, hide paging and show "Not Found" element
         $('.student-notfound').show();
         $(".pagination").hide();
     }
-    
     
 }
 
