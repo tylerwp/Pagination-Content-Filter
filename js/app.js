@@ -84,20 +84,29 @@ var paginationCreation = function(){
 //Add search fields to DOM with button click and keyup events
 
 var studentSearch = $("<div>").addClass('student-search');
-studentSearch.append($('<input>').on('keyup',function(){ DataSearch(this);}).attr({placeholder:'Search for students...',id:'inputSearch'}));
+
+//Keyup event can cause errors if typing to fast. possible fix by delaying events
+/*Disable keyup functionality until fixed.
+studentSearch.append($('<input>').on('keyup',function(){   
+        DataSearch(this);    
+    }).attr({placeholder:'Search for students...',id:'inputSearch'}));
+*/
+
+studentSearch.append($('<input>').attr({placeholder:'Search for students...',id:'inputSearch'}));
+
 var inputSearch = $('#inputSearch');
 var searchButton = $('<button>').text('Search');
 
 function DataSearch(inputField){
     var inputData = $(inputField).val();
-    
+    ClearLists();//clear lists
     if(inputData !== ''){
-    //search student list master
+    //search student list master     
     studentListSearchFiltered = studentListMaster.find("h3:contains('"+ $(inputField).val().toLowerCase() + "'),span:contains('"+ $(inputField).val().toLowerCase() + "')").parent().parent().show();
     
     
     //update list to display filtered results
-    studentList.hide();
+   // studentList.hide();
     studentList = studentListSearchFiltered;
     studentListChildrenFiltered(StudentsPerPage,1);
         
@@ -125,5 +134,20 @@ $('.page-header').append(studentSearch);
 
 //display students paginated list on first run
 studentListChildrenFiltered(StudentsPerPage,1);
+
+
+//clear list function
+function ClearLists(){
+    studentList.each(function(index,li){ 
+            var studentListItem = $(li); 
+               //hide elements that are not on current page
+                studentListItem.hide(); 
+        });  
+     studentListMaster.each(function(index,li){ 
+            var studentListItem = $(li); 
+               //hide elements that are not on current page
+                studentListItem.hide(); 
+        });  
+}
 
 
