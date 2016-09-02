@@ -12,7 +12,7 @@ studentList = studentListMaster;
 console.log(studentList.length);
 
 //Loop through the Student list and filter based on paging
-var studentListChildrenFiltered = function(PerPage,CurPage){
+var studentListChildrenFiltered = function(PerPage,CurPage,fade){
     CurrentPage = CurPage;//set global
     
     //check if list has data
@@ -25,8 +25,13 @@ var studentListChildrenFiltered = function(PerPage,CurPage){
             var pageIndexEnd = PerPage*CurPage;       
             //display list based on current page
             if(index >= pageIndexStart && index < pageIndexEnd){           
-               //fade in results
-                studentListItem.fadeIn(1000);                       
+               //fade in results only if event from paging 
+                if(fade){
+                    studentListItem.fadeIn(1000); 
+                }else{
+                    studentListItem.show(); 
+                }                
+                 
             }else{ 
                //hide elements that are not on current page
                 studentListItem.hide();       
@@ -68,7 +73,7 @@ var paginationCreation = function(){
                     //use clicked link's text as page value to update view
                     var thePage = $(this);             
                     //call function when clicked                
-                    studentListChildrenFiltered(StudentsPerPage,thePage.text());
+                    studentListChildrenFiltered(StudentsPerPage,thePage.text(),true);
                })));
         }
        
@@ -86,13 +91,13 @@ var paginationCreation = function(){
 var studentSearch = $("<div>").addClass('student-search');
 
 //Keyup event can cause errors if typing to fast. possible fix by delaying events
-/*Disable keyup functionality until fixed.
+//Disable keyup functionality until fixed.
 studentSearch.append($('<input>').on('keyup',function(){   
         DataSearch(this);    
     }).attr({placeholder:'Search for students...',id:'inputSearch'}));
-*/
 
-studentSearch.append($('<input>').attr({placeholder:'Search for students...',id:'inputSearch'}));
+
+//studentSearch.append($('<input>').attr({placeholder:'Search for students...',id:'inputSearch'}));
 
 var inputSearch = $('#inputSearch');
 var searchButton = $('<button>').text('Search');
@@ -108,12 +113,12 @@ function DataSearch(inputField){
     //update list to display filtered results
    // studentList.hide();
     studentList = studentListSearchFiltered;
-    studentListChildrenFiltered(StudentsPerPage,1);
+    studentListChildrenFiltered(StudentsPerPage,1,false);
         
     }else{
         //input field was empty, reset to master list
         studentList = studentListMaster;
-        studentListChildrenFiltered(StudentsPerPage,1);
+        studentListChildrenFiltered(StudentsPerPage,1,false);
         
     }
     
@@ -133,7 +138,7 @@ $('.page-header').append(studentSearch);
 
 
 //display students paginated list on first run
-studentListChildrenFiltered(StudentsPerPage,1);
+studentListChildrenFiltered(StudentsPerPage,1,true);
 
 
 //clear list function
