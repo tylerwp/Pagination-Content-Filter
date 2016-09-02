@@ -11,7 +11,13 @@ studentList = studentListMaster;
 
 console.log(studentList.length);
 
-//Loop through the Student list and filter based on paging
+/**
+* Loop through the Student list and filters based on paging
+*
+* @param {number} PerPage - Results per page.
+* @param {number} CurPage - The current page the results should display.
+* @param {bool} fade - .Condition if the results should use fadeIn effect.
+*/
 var studentListChildrenFiltered = function(PerPage,CurPage,fade){
     CurrentPage = CurPage;//set global
     
@@ -49,7 +55,9 @@ var studentListChildrenFiltered = function(PerPage,CurPage,fade){
     
 }
 
-//Create Pagination at bottom of student list
+/**
+* Create Pagination at bottom of student list
+*/
 var paginationCreation = function(){
     
     var page = $('.page');
@@ -87,7 +95,6 @@ var paginationCreation = function(){
 
 
 //Add search fields to DOM with button click and keyup events
-
 var studentSearch = $("<div>").addClass('student-search');
 
 //Keyup event can cause errors if typing to fast. possible fix by delaying events
@@ -96,12 +103,15 @@ studentSearch.append($('<input>').on('keyup',function(){
         DataSearch(this);    
     }).attr({placeholder:'Search for students...',id:'inputSearch'}));
 
-
-//studentSearch.append($('<input>').attr({placeholder:'Search for students...',id:'inputSearch'}));
-
 var inputSearch = $('#inputSearch');
 var searchButton = $('<button>').text('Search');
 
+
+/**
+* Searching student list
+*
+* @param {Object.<string>} inputField - Search entered in #inputSearch.
+*/
 function DataSearch(inputField){
     var inputData = $(inputField).val();
     ClearLists();//clear lists
@@ -136,12 +146,12 @@ $('.page-header').after($("<div>No students found.</div>").addClass('student-not
 $('.page-header').append(studentSearch);
 
 
-
 //display students paginated list on first run
 studentListChildrenFiltered(StudentsPerPage,1,true);
 
-
-//clear list function
+/**
+* Hide all list objects in preparation for new results.
+*/
 function ClearLists(){
     studentList.each(function(index,li){ 
             var studentListItem = $(li); 
