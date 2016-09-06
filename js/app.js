@@ -53,7 +53,7 @@ var studentListChildrenFiltered = function(PerPage,CurPage,fade){
         $(".pagination").hide();
     }
     
-}
+};
 
 /**
 * Create Pagination at bottom of student list
@@ -64,34 +64,42 @@ var paginationCreation = function(){
     var pagination = $("<div>").addClass('pagination');
     var PagiUL = $("<ul>");  
 
-    //create paging elements based on number of students and page size
-    for(i=0;i<studentList.length/StudentsPerPage;i++){
-        //add active class if current page, then add click function for the rest.
-        if(i == CurrentPage-1){
-            var PagiLI = $("<li>");
-            var PagiLink = $('<a href="#">');
-            PagiLink.text(i+1);
-            PagiUL.append(PagiLI.append(PagiLink.addClass("active")));            
-        }else{
-            var PagiLI = $("<li>");
-            var PagiLink = $('<a href="#">');
-            PagiLink.text(i+1);
-            //Add click event to anchor tags
-            PagiUL.append(PagiLI.append(PagiLink.on("click",function(){
-                    //use clicked link's text as page value to update view
-                    var thePage = $(this);             
-                    //call function when clicked                
-                    studentListChildrenFiltered(StudentsPerPage,thePage.text(),true);
-               })));
+    //Don't display pagination if number of students <= StudentsPerPage
+    if(studentList.length <= StudentsPerPage){
+        //remove pagination
+        $(".pagination").remove();
+    }else{
+        //create paging elements based on number of students and page size
+        for(var i=0;i<studentList.length/StudentsPerPage;i++){
+            //add active class if current page, then add click function for the rest.
+            if(i == CurrentPage-1){
+                var PagiLIcp = $("<li>");
+                var PagiLinkcp = $('<a href="#">');
+                PagiLinkcp.text(i+1);
+                PagiUL.append(PagiLIcp.append(PagiLinkcp.addClass("active")));            
+            }else{
+                var PagiLI = $("<li>");
+                var PagiLink = $('<a href="#">');
+                PagiLink.text(i+1);
+                //Add click event to anchor tags
+                PagiUL.append(PagiLI.append(PagiLink.on("click",function(){
+                        //use clicked link's text as page value to update view
+                        var thePage = $(this);             
+                        //call function when clicked                
+                        studentListChildrenFiltered(StudentsPerPage,thePage.text(),true);
+                })));
+            }
+        
         }
-       
+        //remove pagination if exists
+        $(".pagination").remove();
+        //add updated paging
+        pagination.append(PagiUL);    
+        page.append(pagination);
     }
-    //remove pagination if exists
-    $(".pagination").remove();
-    //add updated paging
-    pagination.append(PagiUL);    
-    page.append(pagination);
-}
+
+
+};
 
 
 //Add search fields to DOM with button click and keyup events
@@ -140,9 +148,9 @@ studentSearch.append(searchButton.on('click',function(){
     var inputSearch = $('#inputSearch');
     DataSearch(inputSearch);
     
-}))
+}));
 //add not found elements to page
-$('.page-header').after($("<div>No students found.</div>").addClass('student-notfound').hide())
+$('.page-header').after($("<div>No students found.</div>").addClass('student-notfound').hide());
 $('.page-header').append(studentSearch);
 
 
