@@ -111,7 +111,6 @@ studentSearch.append($('<input>').on('keyup',function(){
         DataSearch(this);    
     }).attr({placeholder:'Search for students...',id:'inputSearch'}));
 
-var inputSearch = $('#inputSearch');
 var searchButton = $('<button>').text('Search');
 
 
